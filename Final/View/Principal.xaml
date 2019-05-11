@@ -1,0 +1,129 @@
+﻿<Window x:Class="Final.View.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Final.View"
+        xmlns:vm1="clr-namespace:Final.ViewModel"
+        xmlns:local1="clr-namespace:Final.Commands"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Title="Productos" Height="372" Width="615" BorderBrush="#FF9AC1D8" BorderThickness="5,10,5,10" ResizeMode="NoResize" Foreground="White">
+    <Window.Background>
+        <ImageBrush ImageSource="../iconos/fondo22.jpg" Stretch="UniformToFill"/>
+    </Window.Background>
+    <Window.Resources>
+        <vm1:PrincipalViewModel x:Key="ProductosVM"/>
+
+        <Style x:Key="textBoxInError" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="1,-6,-1,4" DataContext="{StaticResource ProductosVM}" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="419*"/>
+            <ColumnDefinition Width="187*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Background>
+            <ImageBrush/>
+        </Grid.Background>
+
+        <!--labels y TexBox-->
+        <TextBox Style="{StaticResource textBoxInError}"  x:Name="precio_compra"  IsEnabled="{Binding IsEnabledT}" 
+                 HorizontalAlignment="Left" Height="23" Margin="202,124,0,0" 
+                 TextWrapping="Wrap" VerticalAlignment="Top" Width="214" FontSize="15" Opacity="0.9" 
+                 Background="#FFF6F6F6" FontWeight="Bold" >
+            <TextBox.Text>
+                <Binding Path="ProductoSeleccionado.PrecioCompra" Source="{StaticResource ProductosVM}"
+                         ValidatesOnExceptions="True"
+                         StringFormat='0.0'
+                         UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local1:Validacion ValidationStep="RawProposedValue"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox Style="{StaticResource textBoxInError}"  x:Name="precio_venta" IsEnabled="{Binding IsEnabledT}"
+                 HorizontalAlignment="Left" Height="23" Margin="202,161,0,0" TextWrapping="Wrap" 
+        VerticalAlignment="Top" Width="214" FontSize="15" Opacity="0.9" Background="#FFF6F6F6"
+        FontWeight="Bold">
+            <TextBox.Text>
+                <Binding Path="ProductoSeleccionado.PrecioVenta" Source="{StaticResource ProductosVM}"
+                         ValidatesOnExceptions="True" StringFormat='0.0'
+                         UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local1:Validacion ValidationStep="RawProposedValue"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Label x:Name="lbl" Content="Nombre" HorizontalAlignment="Left" Margin="33,44,0,0" VerticalAlignment="Top" Width="82" FontSize="16" Height="29" FontWeight="Bold" Opacity="0.8"/>
+        <TextBox x:Name="nombre" IsEnabled="{Binding IsEnabledT}"  Text="{Binding ProductoSeleccionado.Nombre, Source={StaticResource ProductosVM}}"
+                 HorizontalAlignment="Left" Height="23" Margin="202,50,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="214" FontSize="15" Opacity="0.9" Background="#FFF6F6F6" FontWeight="Bold"/>
+        <Label Content="Descripción" HorizontalAlignment="Left" Margin="33,85,0,0" VerticalAlignment="Top" FontSize="16" Width="99" FontWeight="Bold" Opacity="0.8"/>
+        <TextBox x:Name="descripcion" IsEnabled="{Binding IsEnabledT}" Text="{Binding ProductoSeleccionado.Descripcion, Source={StaticResource ProductosVM}}"
+                 HorizontalAlignment="Left" Height="23" Margin="202,87,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="214" FontSize="15" Opacity="0.9" Background="#FFF6F6F6" FontWeight="Bold"/>
+        <Label Content="Precio de Compra"  HorizontalAlignment="Left" Margin="33,122,0,0" VerticalAlignment="Top" FontSize="16" Height="29" Width="143" FontWeight="Bold" Opacity="0.8"/>
+        <Label Content="Precio de Venta" HorizontalAlignment="Left" Margin="33,159,0,0" VerticalAlignment="Top" FontSize="16" Height="29" Width="130" FontWeight="Bold" Opacity="0.8"/>
+        <Label x:Name="lbl_origen" Content="Origen del Producto" HorizontalAlignment="Left" Margin="33,195,0,0" VerticalAlignment="Top" Width="166" FontSize="16" Height="36" FontWeight="Bold" Opacity="0.8"/>
+        <ComboBox  ItemsSource="{Binding V_Paises}" SelectedItem="{Binding SelectedValue, Mode=TwoWay, 
+          UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=ProductoSeleccionado.Origen}"
+          HorizontalAlignment="Left" Margin="202,202,0,0" VerticalAlignment="Top" Width="214" 
+          RenderTransformOrigin="0.067,0.114" Opacity="0.7" Foreground="#FF08081A" 
+          OpacityMask="White" FontSize="15" Height="26" FontWeight="SemiBold" IsEnabled="{Binding IsEnabledT}" >
+            <ComboBox.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Offset="0.229"/>
+                </LinearGradientBrush>
+            </ComboBox.Background>
+        </ComboBox>
+
+        <!--botones de accion-->
+        <StackPanel Margin="47,43,19,51" Grid.Column="1">
+            <Button  Command="{Binding Agregar, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Width="119" Margin="0,5,0,0" Opacity="0.6">
+                <Image Source="../iconos/agregar2.png" OpacityMask="#FFFDF7F7" Opacity="0.9"/>
+            </Button>
+            <Button Margin="0,5,0,0" Command="{Binding Guardar, Mode=OneWay, Source={StaticResource ProductosVM}}"   FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Opacity="0.6" Width="119">
+                <Image Source="../iconos/guardar2.png" Opacity="0.89"/>
+            </Button>
+            <Button Margin="0,5,0,0"  Command="{Binding Modificar, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.6" Width="119">
+                <Image Source ="../iconos/modificar2.png " Opacity="0.88" ></Image>
+            </Button>
+            <Button Margin="0,5,0,0"  Command="{Binding Eliminar, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" BorderBrush="{x:Null}" Background="{x:Null}" Opacity="0.6" Width="119">
+                <Image Source="/iconos/eliminar2.png" Opacity="0.9" HorizontalAlignment="Left" ></Image>
+            </Button>
+            <Button Margin="0,5,0,0" Command="{Binding Buscar, Mode=OneWay, Source={StaticResource ProductosVM}}"  FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.6" Width="119">
+                <Image Source="../iconos/buscar2.png" Opacity="0.89"></Image>
+            </Button>
+            <Button Margin="0,5,0,0" Command="{Binding Cancelar, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.6">
+                <Image Source="../iconos/cancelar2.png" HorizontalAlignment="Left" Opacity="0.9" Height="29" Width="110"/>
+            </Button>
+            <Button Margin="0,5,0,0" Command="{Binding Salir, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="{x:Null}" BorderBrush="{x:Null}" Opacity="0.6">
+                <Image Source="../iconos/volver2.png" Opacity="0.9" Width="110" Height="27" ></Image>
+            </Button>
+        </StackPanel>
+
+        <!--botones  de navegacion-->
+        <Button  Margin="139,258,0,44" Command="{Binding Primero, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="#FFF9FEFF" HorizontalAlignment="Left" Opacity="0.8" >
+            <Image Source="../iconos/primero.png" HorizontalAlignment="Left" Opacity="0.8"/>
+        </Button>
+        <Button Margin="295,258,0,44"  Command="{Binding Ultimo, Mode=OneWay, Source={StaticResource ProductosVM}}" FontSize="14" Background="#FFF9FEFF" HorizontalAlignment="Left" Opacity="0.8">
+            <Image Source="../iconos/ultimo.png" HorizontalAlignment="Left" Opacity="0.8"/>
+        </Button>
+        <Button  Margin="243,258,0,44"  Command="{Binding Adelante, Mode=OneWay, Source={StaticResource ProductosVM}}" RenderTransformOrigin="1.038,-1.577" FontSize="14" Background="#FFFDFFFE" HorizontalAlignment="Left" Opacity="0.8">
+            <Image Source="../iconos/siguiente.png" HorizontalAlignment="Left" Opacity="0.8"/>
+        </Button>
+        <Button  Margin="191,258,0,44" Command="{Binding Atras, Mode=OneWay, Source={StaticResource ProductosVM}}" RenderTransformOrigin="-0.297,0.346" FontSize="14" Background="#FFFDFEFF" HorizontalAlignment="Left" Opacity="0.8">
+            <Image Source="../iconos/anterior.png" HorizontalAlignment="Left" Opacity="0.8"/>
+        </Button>
+    </Grid>
+</Window>
