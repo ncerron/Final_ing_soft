@@ -1,2 +1,1 @@
-# Final_ing_soft
-ABM en C# utilizando patrón MVVM
+Final de la materia Ingenieria de Software. ABM en lenguaje C# utizando el patron MVVM
